@@ -1,0 +1,15 @@
+{
+  "name": "tree-view-otus-lesson",
+  "version": "1.0.2",
+  "description": "Function for displauing a tree structure",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "npm",
+    "npm-tree-view"
+  ],
+  "author": "Artem Gilyazetdinov",
+  "license": "ISC"
+}
