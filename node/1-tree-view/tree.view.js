@@ -12,7 +12,7 @@ const treeView = (jsonFile, newSrting = "", root = "", parent = false) => {
     for (const key in jsonFile) {
 
         let elem = jsonFile[key]
-        if (!(elem instanceof Object)) {
+        if (elem && !Array.isArray(elem) &&  Object.keys(elem).length) {
             res += newSrting + root + elem + "\n"
             root = ""
         } else {
