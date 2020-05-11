@@ -1,13 +1,20 @@
-#!/usr/bin/env node 
-console.log("description: ")
+#!/usr/bin/env node
+const commander = require('commander');
+const program = new commander.Command();
 
-const fs = require('fs')
-const path = require('path');
-// const {treeView} = require('./tree.view');
+const { treeView } = require('./app/tree.view');
 
 
-fs.readFile(path.join('test_file.json'), (err, content) => {
-    if (err) return console.log('Error loading file:', err);
-    
-   console.log( treeView(JSON.parse(content)));
-});
+program
+    .command('show <dir>', { isDefault: true })
+    .option('-d, --depth <depthNumber>', 'depth show',0)
+    .action((dir,opts)=>{
+        console.log(`server on port ${opts.depth}`);
+        console.log(`server on port ${dir}`);
+        treeView(dir,opts.depth)
+              .then(res => console.log(res))
+              .catch(err => console.log(err.message, err.stack))
+
+    })
+
+program.parse(process.argv);

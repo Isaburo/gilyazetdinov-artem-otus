@@ -1,5 +1,5 @@
 'use strict'
-let res = ""
+const fs = require('fs')
 
 const obj = {
     lastChild: "└──",
@@ -7,32 +7,45 @@ const obj = {
     thru: "│",
 }
 
-const treeView = (jsonFile, newSrting = "", root = "", parent = false) => {
+let result = '',
+    root,
+    pathFile,
+    arr,
+    emptyStr,
+    inside = '';
 
-    for (const key in jsonFile) {
+const treeView = async (base,depthCalc, newSrting = "", childOf = true, depth = 0) => {
 
-        let elem = jsonFile[key]
-        if (elem && !Array.isArray(elem) &&  Object.keys(elem).length) {
-            res += newSrting + root + elem + "\n"
-            root = ""
+    if (newSrting === undefined) newSrting = "";
+
+    arr = fs.readdirSync(base)
+
+    arr.forEach((files, i, array) => {
+        childOf = true
+        if (i !== array.length - 1) {
+            root = obj.branch
         } else {
-            newSrting += parent ? obj.thru : " " 
-
-            for (let item = 0; item < elem.length; item++) {
-                parent = false
-                if (item === elem.length - 1) root = obj.lastChild
-                else {
-                    parent = true
-                    root = obj.branch
-                }
-
-                treeView(elem[item], newSrting, root, parent)
-            }
+            root = obj.lastChild
+            childOf = false
         }
 
-    }
 
-    return res;
+        if (depth >= depthCalc) {
+            if (fs.lstatSync(base + '/' + files).isDirectory()) inside = ' ../'
+            else inside = ''
+            result += newSrting + root + files + inside + "\n";
+        } else if (fs.lstatSync(base + '/' + files).isFile()) {
+            result += newSrting + root + files + "\n"
+        } else {
+            pathFile = base + '/' + files
+
+            result += newSrting + root + files + "\n"
+            emptyStr = childOf ? obj.thru : ' ';
+            treeView(pathFile,depthCalc, newSrting + emptyStr, childOf, depth + 1)
+        }
+    })
+
+    return result;
 }
 
 module.exports.treeView = treeView;
