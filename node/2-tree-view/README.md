@@ -1,4 +1,4 @@
 # This is just an example package.
 npm start
 
-example tree Node.js -d (--depth) 2
+example tree show /home/artem/projects/my/learn/Otus/webinarCLI -d 2
